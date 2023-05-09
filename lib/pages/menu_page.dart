@@ -1,6 +1,4 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_tfg/pages/home_page.dart';
+import '../library/imports.dart';
 
 class Menu_Page extends StatefulWidget {
   const Menu_Page({super.key});
@@ -16,6 +14,7 @@ class _Menu_PageState extends State<Menu_Page> {
   Widget build(BuildContext context) {
     var _pageOption = [
       // Aqui van las screens
+      Login_Page(),
       Home_Page(),
       // UpcomingMovies_Page(),
       // PopularMovies_Page(),

@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-
-import 'pages/menu_page.dart';
+import 'library/imports.dart';
 
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TFG APP',
       debugShowCheckedModeBanner: false,
-      home: Menu_Page(),
+      home: Login_Page(),
     );
   }
 }
