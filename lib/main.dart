@@ -1,25 +1,33 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import 'library/imports.dart';
+import './provider/auth_provider.dart';
+import './pages/login_page.dart';
 
 Future<void> main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FlutterNativeSplash.remove(); // Remove the 'await' keyword
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    // whenever your initialization is completed, remove the splash screen:
-    FlutterNativeSplash.remove();
-    return MaterialApp(
-      title: 'TFG APP',
-      debugShowCheckedModeBanner: false,
-      home: Login_Page(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Your App Title',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: Login_Page(),
+      ),
     );
   }
 }

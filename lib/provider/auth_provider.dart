@@ -38,6 +38,8 @@ class AuthProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+  //
+  
 
   // LOGUEAR USUARIO CON EMAIL/PASSWORD
 }
