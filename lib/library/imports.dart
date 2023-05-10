@@ -14,3 +14,5 @@ export 'package:firebase_core/firebase_core.dart';
 
 export 'dart:io';
 export 'package:flutter_tfg/firebase_options.dart';
+
+export 'package:flutter_signin_button/flutter_signin_button.dart';

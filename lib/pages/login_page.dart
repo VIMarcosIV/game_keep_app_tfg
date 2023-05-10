@@ -44,6 +44,15 @@ class Login_Page extends StatelessWidget {
                         },
                         child: Text('Entrar'),
                       ),
+                      SignInButton(
+                        Buttons.Google,
+                        onPressed: (
+                            // REGISTRO CON GOOGLE
+                            ) {
+                          // Acción a realizar cuando se presione el botón de Google
+                          // por ejemplo, iniciar sesión con Google.
+                        },
+                      ),
                       TextButton(
                         onPressed: () {
                           provider.registrarUsuario(context);
