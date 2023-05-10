@@ -1,5 +1,7 @@
-import '../library/imports.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
+import '../library/imports.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 class AuthProvider extends ChangeNotifier {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -21,6 +23,11 @@ class AuthProvider extends ChangeNotifier {
         email: emailController.text,
         password: passwordController.text,
       );
+
+      FirebaseFirestore.instance.collection('roles').doc(credential.user!.uid).set({
+        'role': 'user',
+        'email': credential.user!.email,
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -48,6 +55,17 @@ class AuthProvider extends ChangeNotifier {
         password: passwordController.text,
       );
 
+
+       DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('roles').doc(FirebaseAuth.instance.currentUser!.uid).get();
+      if (!userDoc.exists){
+        FirebaseFirestore.instance.collection('roles').doc(FirebaseAuth.instance.currentUser!.uid).set({
+                  'email': FirebaseAuth.instance.currentUser!.email,
+                  'role': 'user',
+                  
+                });
+
+      }      
+
       // El inicio de sesión fue exitoso
       // Puedes realizar acciones adicionales aquí si es necesario
     } on FirebaseAuthException catch (e) {
@@ -66,6 +84,45 @@ class AuthProvider extends ChangeNotifier {
       print(e);
     }
     notifyListeners();
+  }
+  loguearUsuarioConGoogle(BuildContext context) async {
+      try {
+              final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+              final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+              final OAuthCredential credential = GoogleAuthProvider.credential(
+                accessToken: googleAuth.accessToken,
+                idToken: googleAuth.idToken,
+              );
+              await FirebaseAuth.instance.signInWithCredential(credential);
+              DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('roles').doc(FirebaseAuth.instance.currentUser!.uid).get();
+              if(!userDoc.exists){
+                FirebaseFirestore.instance.collection('roles').doc(FirebaseAuth.instance.currentUser!.uid).set({
+                  'email': FirebaseAuth.instance.currentUser!.email,
+                  'role': 'user',
+                  
+                });
+               
+      }
+      
+              return null;
+            } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-credential' ) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Ocurrió un error al acceder a las credenciales. Inténtalo de nuevo.'),
+          backgroundColor: Colors.red,
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Error al iniciar sesión'),
+          backgroundColor: Colors.red,
+        ));
+      }
+    } catch (e) {
+      print(e);
+    }
+
+
+    
   }
 }
 
