@@ -5,6 +5,9 @@ class Home_Page extends StatelessWidget {
   const Home_Page({Key? key});
 
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+        appBar: AppBar(
+      title: Text("Home page"),
+    ));
   }
 }

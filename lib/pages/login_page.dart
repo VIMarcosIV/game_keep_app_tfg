@@ -33,12 +33,15 @@ class Login_Page extends StatelessWidget {
                         height: 40,
                         child: TextField(
                           controller: provider.passwordController,
+                          obscureText: true,
                           decoration:
                               InputDecoration(prefixIcon: Icon(Icons.password)),
                         ),
                       ),
                       TextButton(
-                        onPressed: null,
+                        onPressed: () {
+                          provider.logearUsuario(context);
+                        },
                         child: Text('Entrar'),
                       ),
                       TextButton(
