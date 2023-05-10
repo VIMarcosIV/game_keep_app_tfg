@@ -39,9 +39,34 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
   //
-  
 
   // LOGUEAR USUARIO CON EMAIL/PASSWORD
+  logearUsuario(BuildContext context) async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      // El inicio de sesión fue exitoso
+      // Puedes realizar acciones adicionales aquí si es necesario
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Credenciales inválidas'),
+          backgroundColor: Colors.red,
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Error al iniciar sesión'),
+          backgroundColor: Colors.red,
+        ));
+      }
+    } catch (e) {
+      print(e);
+    }
+    notifyListeners();
+  }
 }
 
 enum AuthType { signUp, signIn }
