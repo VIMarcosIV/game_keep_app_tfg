@@ -1,11 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_tfg/pages/logout_page.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'library/imports.dart';
 import './provider/auth_provider.dart';
-import './pages/login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,10 +20,13 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Your App Title',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        debugShowCheckedModeBanner: false,
+        theme: customTheme,
         home: Login_Page(),
+        routes: {
+          '/login': (context) => Login_Page(),
+          '/logout': (context) => Logout_Page(),
+        },
       ),
     );
   }

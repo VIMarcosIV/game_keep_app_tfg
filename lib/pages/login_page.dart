@@ -15,59 +15,65 @@ class Login_Page extends StatelessWidget {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Scaffold(
-              body: Padding(
+              appBar: AppBar(
+                title: Text('Video Game App'),
+              ),
+              body: Container(
+                alignment: Alignment.center,
                 padding: EdgeInsets.all(15.0),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 40,
-                        child: TextField(
-                          controller: provider.emailController,
-                          decoration:
-                              InputDecoration(prefixIcon: Icon(Icons.email)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset("assets/images/logo.png", scale: 12),
+                    SizedBox(height: 40),
+                    SizedBox(
+                      height: 40,
+                      child: TextField(
+                        controller: provider.emailController,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.email),
+                          labelText: 'Email',
                         ),
                       ),
-                      SizedBox(
-                        height: 40,
-                        child: TextField(
-                          controller: provider.passwordController,
-                          obscureText: true,
-                          decoration:
-                              InputDecoration(prefixIcon: Icon(Icons.password)),
+                    ),
+                    SizedBox(
+                      height: 40,
+                      child: TextField(
+                        controller: provider.passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.password),
+                          labelText: 'Password',
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          provider.logearUsuario(context);
-                        },
-                        child: Text('Entrar'),
-                      ),
-                      SignInButton(
-                        Buttons.Google,
-                        onPressed: (
-                            // REGISTRO CON GOOGLE
-                            
-                            ) {
-                            provider.loguearUsuarioConGoogle(context);
-                          // Acción a realizar cuando se presione el botón de Google
-                          // por ejemplo, iniciar sesión con Google.
-                        },
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          provider.registrarUsuario(context);
-                        },
-                        child: Text('Registrarse'),
-                      ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        provider.logearUsuario(context);
+                      },
+                      child: Text('Entrar'),
+                    ),
+                    SizedBox(height: 16),
+                    SignInButton(
+                      Buttons.Google,
+                      onPressed: () {
+                        provider.loguearUsuarioConGoogle(context);
+                      },
+                    ),
+                    SizedBox(height: 16),
+                    TextButton(
+                      onPressed: () {
+                        provider.registrarUsuario(context);
+                      },
+                      child: Text('Registrarse'),
+                    ),
+                  ],
                 ),
               ),
             );
           } else {
-            return Home_Page();
+            return Menu_Page();
           }
         },
       );

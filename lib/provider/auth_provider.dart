@@ -2,6 +2,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../library/imports.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 class AuthProvider extends ChangeNotifier {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -24,7 +25,10 @@ class AuthProvider extends ChangeNotifier {
         password: passwordController.text,
       );
 
-      FirebaseFirestore.instance.collection('roles').doc(credential.user!.uid).set({
+      FirebaseFirestore.instance
+          .collection('roles')
+          .doc(credential.user!.uid)
+          .set({
         'role': 'user',
         'email': credential.user!.email,
       });
@@ -55,16 +59,19 @@ class AuthProvider extends ChangeNotifier {
         password: passwordController.text,
       );
 
-
-       DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('roles').doc(FirebaseAuth.instance.currentUser!.uid).get();
-      if (!userDoc.exists){
-        FirebaseFirestore.instance.collection('roles').doc(FirebaseAuth.instance.currentUser!.uid).set({
-                  'email': FirebaseAuth.instance.currentUser!.email,
-                  'role': 'user',
-                  
-                });
-
-      }      
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('roles')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      if (!userDoc.exists) {
+        FirebaseFirestore.instance
+            .collection('roles')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .set({
+          'email': FirebaseAuth.instance.currentUser!.email,
+          'role': 'user',
+        });
+      }
 
       // El inicio de sesión fue exitoso
       // Puedes realizar acciones adicionales aquí si es necesario
@@ -85,30 +92,37 @@ class AuthProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
   loguearUsuarioConGoogle(BuildContext context) async {
-      try {
-              final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-              final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
-              final OAuthCredential credential = GoogleAuthProvider.credential(
-                accessToken: googleAuth.accessToken,
-                idToken: googleAuth.idToken,
-              );
-              await FirebaseAuth.instance.signInWithCredential(credential);
-              DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('roles').doc(FirebaseAuth.instance.currentUser!.uid).get();
-              if(!userDoc.exists){
-                FirebaseFirestore.instance.collection('roles').doc(FirebaseAuth.instance.currentUser!.uid).set({
-                  'email': FirebaseAuth.instance.currentUser!.email,
-                  'role': 'user',
-                  
-                });
-               
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('roles')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      if (!userDoc.exists) {
+        FirebaseFirestore.instance
+            .collection('roles')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .set({
+          'email': FirebaseAuth.instance.currentUser!.email,
+          'role': 'user',
+        });
       }
-      
-              return null;
-            } on FirebaseAuthException catch (e) {
-      if (e.code == 'invalid-credential' ) {
+
+      return null;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-credential') {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Ocurrió un error al acceder a las credenciales. Inténtalo de nuevo.'),
+          content: Text(
+              'Ocurrió un error al acceder a las credenciales. Inténtalo de nuevo.'),
           backgroundColor: Colors.red,
         ));
       } else {
@@ -120,9 +134,6 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       print(e);
     }
-
-
-    
   }
 }
 
