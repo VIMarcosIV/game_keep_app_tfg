@@ -16,9 +16,6 @@ class Login_Page extends StatelessWidget {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Scaffold(
-              appBar: AppBar(
-                title: Text("TFG APP"),
-              ),
               body: LayoutBuilder(
                 builder: (context, constraints) {
                   return SingleChildScrollView(
@@ -38,20 +35,55 @@ class Login_Page extends StatelessWidget {
                               height: 40,
                               child: TextField(
                                 controller: provider.emailController,
+                                style: TextStyle(
+                                    color: Colors.white), // Color del texto
+                                cursorColor: Colors.teal, // Color del cursor
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.email),
-                                  hintText: 'Email',
+                                  prefixIcon: Icon(Icons.email,
+                                      color: Colors.white), // Color del icono
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors
+                                            .white), // Color del subrayado cuando no está seleccionado
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors
+                                            .white), // Color del subrayado cuando está seleccionado
+                                  ),
+                                  hintText: 'Correo Electrónico',
+                                  hintStyle: TextStyle(
+                                      color: Colors
+                                          .white70), // Color del texto de sugerencia
                                 ),
                               ),
                             ),
+                            SizedBox(height: 16),
                             SizedBox(
                               height: 40,
                               child: TextField(
                                 controller: provider.passwordController,
                                 obscureText: true,
+                                style: TextStyle(
+                                    color: Colors.white), // Color del texto
+                                cursorColor: Colors.teal, // Color del cursor
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.password),
-                                  hintText: 'Password',
+                                  prefixIcon: Icon(Icons.password,
+                                      color: Colors.white), // Color del icono
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors
+                                            .white), // Color del subrayado cuando no está seleccionado
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors
+                                            .white), // Color del subrayado cuando está seleccionado
+                                  ),
+                                  hintText: 'Contraseña',
+                                  hintStyle: TextStyle(
+                                      color: Colors
+                                          .white70), // Color del texto de sugerencia
                                 ),
                               ),
                             ),
