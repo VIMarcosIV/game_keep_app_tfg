@@ -1,3 +1,4 @@
+import 'package:flutter_tfg/pages/gird_page.dart';
 import 'package:flutter_tfg/pages/logout_page.dart';
 
 import '../library/imports.dart';
@@ -17,7 +18,7 @@ class _Menu_PageState extends State<Menu_Page> {
     var _pageOption = [
       // Aqui van las screens
       Home_Page(),
-      Home_Page(),
+      Grid_Page(),
       Logout_Page()
     ];
     return Scaffold(
