@@ -29,7 +29,7 @@ class Grid_Page extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFF646464), // Color de fondo gris oscuro (ajustado)
+        color: Color(0xFF4A4A4A), // Color de fondo gris oscuro (ajustado)
         borderRadius: BorderRadius.circular(10.0), // Bordes redondeados
       ),
       child: Column(
@@ -37,21 +37,19 @@ class Grid_Page extends StatelessWidget {
         children: [
           Image.asset(
             "assets/images/logo.png", // Ruta de la imagen de muestra
-            width: 50, // Ancho de la imagen
-            height: 50, // Alto de la imagen
+            width: 90, // Ancho de la imagen
+            height: 90, // Alto de la imagen
           ),
-          SizedBox(height: 8.0), // Separación entre imagen y texto (ajustado)
           Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: 8.0), // Espaciado horizontal del texto
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                'Item $index Esto es un titulo de prueba', // Texto del título simplificado
-                style: theme.textTheme.headline1!.copyWith(
-                  fontSize: 16.0, // Tamaño de fuente reducido (ajustado)
-                  color: Colors.white,
-                ),
+                horizontal: 8.0,
+                vertical: 10.0), // Ajuste del padding horizontal
+            child: Text(
+              'Item $index: Titulo de prueba', // Texto del título simplificado
+              textAlign: TextAlign.center, // Alineación centrada del texto
+              style: theme.textTheme.headline1!.copyWith(
+                fontSize: 14.0, // Tamaño de fuente reducido (ajustado)
+                color: Colors.white,
               ),
             ),
           ),
