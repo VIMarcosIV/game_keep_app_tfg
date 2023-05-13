@@ -18,6 +18,16 @@ class AuthProvider extends ChangeNotifier {
 
   // REGISTRAR UN USUARIO
   registrarUsuario(BuildContext context) async {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Por favor, completa todos los campos'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -34,22 +44,25 @@ class AuthProvider extends ChangeNotifier {
       });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('La contraseña es muy débil'),
-          backgroundColor: Colors.red,
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('La contraseña es muy débil'),
+            backgroundColor: Colors.red,
+          ),
+        );
       } else if (e.code == 'email-already-in-use') {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Este correo ya existe'),
-          backgroundColor: Colors.red,
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Este correo ya existe'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } catch (e) {
       print(e);
     }
     notifyListeners();
   }
-  //
 
   // LOGUEAR USUARIO CON EMAIL/PASSWORD
   logearUsuario(BuildContext context) async {

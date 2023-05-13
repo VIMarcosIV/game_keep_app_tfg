@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_tfg/pages/logout_page.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,11 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
