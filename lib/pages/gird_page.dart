@@ -58,7 +58,7 @@ Widget gridItemWidget(BuildContext context, String title, String poster) {
       children: [
         Image.network(
           poster,
-          scale: 2,
+          scale: 6,
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
