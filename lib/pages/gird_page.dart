@@ -33,24 +33,32 @@ class _Grid_PageState extends State<Grid_Page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Grid Screen'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Realizar la búsqueda aquí
-            },
-          ),
-        ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(56.0),
+          preferredSize: Size.fromRadius(20),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                hintText: 'Buscar por título',
-              ),
+            padding: EdgeInsets.symmetric(
+                horizontal: 16), // Añadir relleno a la derecha
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    child: TextField(
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Buscar por título',
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors
+                                  .white), // Establecer color de underline
+                        ),
+                        hintStyle: TextStyle(color: Colors.white),
+                        icon: Icon(Icons.search, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
