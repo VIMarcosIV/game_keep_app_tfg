@@ -17,8 +17,8 @@ class _Menu_PageState extends State<Menu_Page> {
   Widget build(BuildContext context) {
     var _pageOption = [
       // Aqui van las screens
-      Home_Page(),
       Grid_Page(),
+      Home_Page(),
       Logout_Page()
     ];
     return Scaffold(
