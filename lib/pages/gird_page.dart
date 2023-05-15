@@ -33,9 +33,10 @@ class Grid_Page extends StatelessWidget {
             padding: EdgeInsets.all(16.0),
             itemBuilder: (BuildContext context, int index) {
               DocumentSnapshot document = snapshot.data!.docs[index];
-              String title = document['title'];
               //Añadir el resto de datos
-              return gridItemWidget(context, title);
+              String title = document['title'];
+              String poster = document['poster'];
+              return gridItemWidget(context, title, poster);
             },
           );
         },
@@ -44,7 +45,7 @@ class Grid_Page extends StatelessWidget {
   }
 }
 
-Widget gridItemWidget(BuildContext context, String title) {
+Widget gridItemWidget(BuildContext context, String title, String poster) {
   final theme = Theme.of(context);
 
   return Container(
@@ -55,10 +56,9 @@ Widget gridItemWidget(BuildContext context, String title) {
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(
-          "assets/images/logo.png",
-          width: 90,
-          height: 90,
+        Image.network(
+          poster,
+          scale: 2,
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
