@@ -1,5 +1,6 @@
 import 'package:flutter_tfg/pages/gird_page.dart';
 import 'package:flutter_tfg/pages/logout_page.dart';
+import 'package:flutter_tfg/pages/savedElements_page.dart';
 
 import '../library/imports.dart';
 
@@ -19,7 +20,7 @@ class _Menu_PageState extends State<Menu_Page> {
       // Aqui van las screens
       Grid_Page(),
       Home_Page(),
-      Logout_Page()
+      Saved_Elements_Page()
     ];
     return Scaffold(
       appBar: AppBar(

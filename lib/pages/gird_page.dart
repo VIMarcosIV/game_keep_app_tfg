@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Grid_Page extends StatefulWidget {
   const Grid_Page({Key? key}) : super(key: key);
@@ -36,8 +38,7 @@ class _Grid_PageState extends State<Grid_Page> {
         bottom: PreferredSize(
           preferredSize: Size.fromRadius(20),
           child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: 16), // Añadir relleno a la derecha
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
                 Expanded(
@@ -48,9 +49,7 @@ class _Grid_PageState extends State<Grid_Page> {
                       decoration: InputDecoration(
                         hintText: 'Buscar por título',
                         enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors
-                                  .white), // Establecer color de underline
+                          borderSide: BorderSide(color: Colors.white),
                         ),
                         hintStyle: TextStyle(color: Colors.white),
                         icon: Icon(Icons.search, color: Colors.white),
@@ -78,7 +77,6 @@ class _Grid_PageState extends State<Grid_Page> {
             return CircularProgressIndicator();
           }
 
-          // Filtrar los resultados según el texto de búsqueda
           final filteredDocs = snapshot.data!.docs.where((doc) {
             final title = doc['title'] as String;
             return title.toLowerCase().startsWith(searchText.toLowerCase());
@@ -97,51 +95,114 @@ class _Grid_PageState extends State<Grid_Page> {
               DocumentSnapshot document = filteredDocs[index];
               String title = document['title'] as String;
               String poster = document['poster'] as String;
-              return gridItemWidget(context, title, poster);
+              return GridItemWidget(
+                title: title,
+                poster: poster,
+                onTap: () => _showOptionsDialog(context, title, poster),
+              );
             },
           );
         },
       ),
     );
   }
+
+  void _showOptionsDialog(BuildContext context, String title, String poster) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(title),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.bookmark),
+                title: Text('Guardar elemento'),
+                onTap: () {
+                  // Obtener el ID del usuario logueado
+                  String userId = FirebaseAuth.instance.currentUser!.uid;
+
+                  // Lógica para guardar el elemento en Firestore
+                  FirebaseFirestore.instance
+                      .collection('elementosGuardados')
+                      .add({
+                    'title': title,
+                    'poster': poster,
+                    'userId': userId,
+                  });
+
+                  Navigator.pop(dialogContext);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.add),
+                title: Text('Añadir a colección'),
+                onTap: () {
+                  // Lógica para añadir a colección
+                  Navigator.pop(dialogContext);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
-Widget gridItemWidget(BuildContext context, String title, String poster) {
-  final theme = Theme.of(context);
+class GridItemWidget extends StatelessWidget {
+  final String title;
+  final String poster;
+  final GestureLongPressCallback onTap;
 
-  return Container(
-    decoration: BoxDecoration(
-      color: Color(0xFF4A4A4A),
-      borderRadius: BorderRadius.circular(10.0),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: 110.0, // Tamaño fijo del contenedor de la imagen
-          height: 110.0, // Tamaño fijo del contenedor de la imagen
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10.0), // Radio de borde deseado
-            child: Image.network(
-              poster,
-              fit: BoxFit.contain, // Ajuste de la imagen dentro del contenedor
-            ),
-          ),
+  const GridItemWidget({
+    required this.title,
+    required this.poster,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return GestureDetector(
+      onLongPress: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFF4A4A4A),
+          borderRadius: BorderRadius.circular(10.0),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.headline1!.copyWith(
-              fontSize: 10.0,
-              color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 110.0,
+              height: 110.0,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Image.network(
+                  poster,
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
-          ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headline1!.copyWith(
+                  fontSize: 10.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      ),
+    );
+  }
 }
 
 void main() {
