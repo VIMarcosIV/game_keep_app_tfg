@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Grid_Page extends StatefulWidget {
@@ -119,18 +118,42 @@ class _Grid_PageState extends State<Grid_Page> {
               ListTile(
                 leading: Icon(Icons.bookmark),
                 title: Text('Guardar elemento'),
-                onTap: () {
+                onTap: () async {
                   // Obtener el ID del usuario logueado
                   String userId = FirebaseAuth.instance.currentUser!.uid;
 
-                  // Lógica para guardar el elemento en Firestore
-                  FirebaseFirestore.instance
+                  // Verificar si el elemento ya ha sido guardado
+                  final snapshot = await FirebaseFirestore.instance
                       .collection('elementosGuardados')
-                      .add({
-                    'title': title,
-                    'poster': poster,
-                    'userId': userId,
-                  });
+                      .where('userId', isEqualTo: userId)
+                      .where('title', isEqualTo: title)
+                      .get();
+
+                  if (snapshot.docs.isEmpty) {
+                    // El elemento no ha sido guardado, guardarlo en Firestore
+                    await FirebaseFirestore.instance
+                        .collection('elementosGuardados')
+                        .add({
+                      'title': title,
+                      'poster': poster,
+                      'userId': userId,
+                    });
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Elemento guardado correctamente'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  } else {
+                    // El elemento ya ha sido guardado
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('El elemento ya ha sido guardado'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
 
                   Navigator.pop(dialogContext);
                 },
