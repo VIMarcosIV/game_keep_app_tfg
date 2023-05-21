@@ -8,7 +8,7 @@ class Logout_Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Logout'),
+        title: Text('Cuenta de usuario'),
       ),
       body: Center(
         child: Column(

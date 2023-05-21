@@ -1,8 +1,7 @@
-import 'package:flutter_tfg/pages/gird_page.dart';
 import 'package:flutter_tfg/pages/logout_page.dart';
 import 'package:flutter_tfg/pages/savedElements_page.dart';
-
 import '../library/imports.dart';
+import 'gird_page.dart';
 
 class Menu_Page extends StatefulWidget {
   const Menu_Page({super.key});
@@ -17,15 +16,25 @@ class _Menu_PageState extends State<Menu_Page> {
   @override
   Widget build(BuildContext context) {
     var _pageOption = [
-      // Aqui van las screens
+      // Aquí van las screens
       Grid_Page(),
       Home_Page(),
-      Saved_Elements_Page()
+      Saved_Elements_Page(),
     ];
     return Scaffold(
       appBar: AppBar(
         title: Text("TFG APP"),
-        //Aqui tiene que estar el icono con el usuario para que le mande a la vista de su cuenta
+        actions: [
+          IconButton(
+            icon: Icon(Icons.account_circle, size: 33.5),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Logout_Page()),
+              );
+            },
+          ),
+        ],
       ),
       body: _pageOption[selectedPage],
       bottomNavigationBar: ConvexAppBar(
@@ -36,7 +45,7 @@ class _Menu_PageState extends State<Menu_Page> {
         activeColor: Colors.black,
         height: 55,
         items: [
-          // Aqui van los items que saldran abajo en la NavBar
+          // Aquí van los items que saldrán abajo en la NavBar
           TabItem(
             icon: Icons.home,
             activeIcon: Icons.home_outlined,
