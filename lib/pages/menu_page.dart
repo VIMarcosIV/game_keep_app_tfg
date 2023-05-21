@@ -25,6 +25,7 @@ class _Menu_PageState extends State<Menu_Page> {
     return Scaffold(
       appBar: AppBar(
         title: Text("TFG APP"),
+        //Aqui tiene que estar el icono con el usuario para que le mande a la vista de su cuenta
       ),
       body: _pageOption[selectedPage],
       bottomNavigationBar: ConvexAppBar(
