@@ -34,29 +34,17 @@ class _Grid_PageState extends State<Grid_Page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        bottom: PreferredSize(
-          preferredSize: Size.fromRadius(20),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    child: TextField(
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        hintText: 'Buscar por título',
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        hintStyle: TextStyle(color: Colors.white),
-                        icon: Icon(Icons.search, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+        title: Container(
+          width: double.infinity,
+          child: TextField(
+            controller: searchController,
+            decoration: InputDecoration(
+              hintText: 'Buscar por título',
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              ),
+              hintStyle: TextStyle(color: Colors.white),
+              icon: Icon(Icons.search, color: Colors.white),
             ),
           ),
         ),
@@ -188,7 +176,7 @@ class _Grid_PageState extends State<Grid_Page> {
 class GridItemWidget extends StatelessWidget {
   final String title;
   final String poster;
-  final GestureLongPressCallback onTap;
+  final GestureTapCallback onTap;
 
   const GridItemWidget({
     required this.title,
@@ -201,7 +189,7 @@ class GridItemWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return GestureDetector(
-      onLongPress: onTap,
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           color: Color(0xFF4A4A4A),

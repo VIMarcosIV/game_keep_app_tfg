@@ -10,11 +10,106 @@ class Saved_Elements_Page extends StatefulWidget {
 }
 
 class _Saved_Elements_PageState extends State<Saved_Elements_Page> {
+  late final TextEditingController searchController;
+  String searchText = '';
+
+  @override
+  void initState() {
+    super.initState();
+    searchController = TextEditingController();
+    searchController.addListener(() {
+      setState(() {
+        searchText = searchController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> deleteSavedElement(String documentId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('elementosGuardados')
+          .doc(documentId)
+          .delete();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Elemento eliminado correctamente'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al eliminar el elemento'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> showDeleteDialog(String title, String documentId) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          backgroundColor: Color(0xFF1E1E1E),
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+          title: Text(title),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+                title: Text('Eliminar elemento guardado'),
+                titleTextStyle: TextStyle(color: Colors.white, fontSize: 16),
+                onTap: () async {
+                  await deleteSavedElement(documentId);
+                  Navigator.pop(dialogContext);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tus elementos guardados'),
+        title: Container(
+          width: double.infinity,
+          child: TextField(
+            controller: searchController,
+            decoration: InputDecoration(
+              hintText: 'Buscar por título',
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              ),
+              hintStyle: TextStyle(color: Colors.white),
+              icon: Icon(Icons.search, color: Colors.white),
+            ),
+            onChanged: (value) {
+              setState(() {
+                searchText = value;
+              });
+            },
+          ),
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -33,7 +128,10 @@ class _Saved_Elements_PageState extends State<Saved_Elements_Page> {
             return CircularProgressIndicator();
           }
 
-          final savedElements = snapshot.data!.docs;
+          final savedElements = snapshot.data!.docs.where((doc) {
+            final title = doc['title'] as String;
+            return title.toLowerCase().startsWith(searchText.toLowerCase());
+          }).toList();
 
           return GridView.builder(
             itemCount: savedElements.length,
@@ -48,9 +146,15 @@ class _Saved_Elements_PageState extends State<Saved_Elements_Page> {
               DocumentSnapshot document = savedElements[index];
               String title = document['title'] as String;
               String poster = document['poster'] as String;
-              return GridItemWidget(
-                title: title,
-                poster: poster,
+              String documentId = document.id;
+              return GestureDetector(
+                onTap: () {
+                  showDeleteDialog(title, documentId);
+                },
+                child: GridItemWidget(
+                  title: title,
+                  poster: poster,
+                ),
               );
             },
           );
