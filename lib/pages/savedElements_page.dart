@@ -14,7 +14,7 @@ class _Saved_Elements_PageState extends State<Saved_Elements_Page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Elementos guardados'),
+        title: Text('Tus elementos guardados'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance

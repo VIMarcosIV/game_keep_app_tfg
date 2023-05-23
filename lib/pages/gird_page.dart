@@ -111,13 +111,20 @@ class _Grid_PageState extends State<Grid_Page> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
+          backgroundColor: Color(0xFF1E1E1E),
+          titleTextStyle: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
           title: Text(title),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(Icons.bookmark),
+                leading: Icon(
+                  Icons.bookmark,
+                  color: Colors.white,
+                ),
                 title: Text('Guardar elemento'),
+                titleTextStyle: TextStyle(color: Colors.white, fontSize: 16),
                 onTap: () async {
                   // Obtener el ID del usuario logueado
                   String userId = FirebaseAuth.instance.currentUser!.uid;
@@ -159,8 +166,12 @@ class _Grid_PageState extends State<Grid_Page> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.add),
+                leading: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
                 title: Text('Añadir a colección'),
+                titleTextStyle: TextStyle(color: Colors.white, fontSize: 16),
                 onTap: () {
                   // Lógica para añadir a colección
                   Navigator.pop(dialogContext);

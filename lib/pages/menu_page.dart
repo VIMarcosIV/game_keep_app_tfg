@@ -1,6 +1,7 @@
 import 'package:flutter_tfg/pages/logout_page.dart';
 import 'package:flutter_tfg/pages/savedElements_page.dart';
 import '../library/imports.dart';
+import 'collections_page.dart';
 import 'gird_page.dart';
 
 class Menu_Page extends StatefulWidget {
@@ -18,7 +19,7 @@ class _Menu_PageState extends State<Menu_Page> {
     var _pageOption = [
       // Aquí van las screens
       Grid_Page(),
-      Home_Page(),
+      CreateCollectionScreen(),
       Saved_Elements_Page(),
     ];
     return Scaffold(
