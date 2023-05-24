@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Logout_Page extends StatefulWidget {
   const Logout_Page({Key? key}) : super(key: key);
@@ -22,13 +23,31 @@ class _Logout_PageState extends State<Logout_Page> {
   void countSavedElements() async {
     final userId = user?.uid;
     final querySnapshot = await FirebaseFirestore.instance
-        .collection(
-            'elementosGuardados') // Nombre de la colección que almacena los elementos guardados
+        .collection('elementosGuardados')
         .where('userId', isEqualTo: userId)
         .get();
     setState(() {
       savedElementsCount = querySnapshot.docs.length;
     });
+  }
+
+  Future<void> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+
+      // Sign out from Google if the user signed in with Google
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al cerrar sesión'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -141,10 +160,7 @@ class _Logout_PageState extends State<Logout_Page> {
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(16.0),
         child: ElevatedButton(
-          onPressed: () {
-            FirebaseAuth.instance.signOut();
-            Navigator.pushReplacementNamed(context, '/login');
-          },
+          onPressed: signOut,
           style: ElevatedButton.styleFrom(
             primary: Colors.red,
             onPrimary: Colors.white,
