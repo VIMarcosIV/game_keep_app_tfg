@@ -123,7 +123,8 @@ class Login_Page extends StatelessWidget {
                                   provider.registrarUsuario(context);
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red[500],
+                                  backgroundColor:
+                                      Color.fromRGBO(231, 25, 31, 0.86),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
