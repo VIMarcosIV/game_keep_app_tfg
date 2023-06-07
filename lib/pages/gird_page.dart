@@ -50,8 +50,10 @@ class _Grid_PageState extends State<Grid_Page> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream:
-            FirebaseFirestore.instance.collection('videojuegos').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('videojuegos')
+            .orderBy('title')
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return SnackBar(

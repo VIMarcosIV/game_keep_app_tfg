@@ -57,6 +57,7 @@ class _Logout_PageState extends State<Logout_Page> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Cuenta de usuario'),
+        elevation: 15,
       ),
       body: Container(
         padding: EdgeInsets.all(16.0),

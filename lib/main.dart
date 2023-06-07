@@ -24,7 +24,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthProvider()),
       ],
       child: MaterialApp(
-        title: 'Your App Title',
         debugShowCheckedModeBanner: false,
         theme: customTheme,
         home: Login_Page(),

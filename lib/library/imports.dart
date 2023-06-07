@@ -1,6 +1,5 @@
 export 'package:convex_bottom_bar/convex_bottom_bar.dart';
 export 'package:flutter/material.dart';
-export 'package:flutter_tfg/pages/home_page.dart';
 export 'package:flutter_tfg/pages/login_page.dart';
 
 export 'package:flutter_svg/flutter_svg.dart';
