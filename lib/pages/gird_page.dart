@@ -22,6 +22,7 @@ class _Grid_PageState extends State<Grid_Page> {
         searchText = searchController.text;
       });
     });
+    actualizarVideojuegos();
   }
 
   @override
@@ -282,10 +283,7 @@ class _Grid_PageState extends State<Grid_Page> {
     final collectionName =
         collectionData['name']; // Obtener el campo "name" de la colección
 
-    final videojuegoData = {
-      'title': title,
-      'poster': poster,
-    };
+    final videojuegoData = {'title': title, 'poster': poster, 'estado': ""};
 
     try {
       videojuegoCollectionRef.add(videojuegoData);
@@ -377,4 +375,18 @@ void main() {
   runApp(MaterialApp(
     home: Grid_Page(),
   ));
+}
+
+Future<void> actualizarVideojuegos() async {
+  final videojuegosRef = FirebaseFirestore.instance.collection('videojuegos');
+
+  final querySnapshot = await videojuegosRef.get();
+
+  final batchUpdate = FirebaseFirestore.instance.batch();
+
+  for (final docSnapshot in querySnapshot.docs) {
+    batchUpdate.update(docSnapshot.reference, {'estado': ''});
+  }
+
+  await batchUpdate.commit();
 }

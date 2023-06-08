@@ -71,10 +71,13 @@ class CollectionDetailScreen extends StatelessWidget {
               final videojuego = videojuegos[index];
               final title = videojuego['title'] as String;
               final poster = videojuego['poster'] as String;
+              final estado = videojuego['estado']
+                  as String; // Obtener el estado del videojuego
 
               return GridItemWidget(
                 title: title,
                 poster: poster,
+                estado: estado,
                 onDelete: () {
                   // Eliminar elemento de la colección
                   videojuego.reference.delete();
@@ -106,6 +109,7 @@ class CollectionDetailScreen extends StatelessWidget {
 class GridItemWidget extends StatelessWidget {
   final String title;
   final String poster;
+  final String estado;
   final VoidCallback onDelete;
   final VoidCallback onMarkCompleted;
   final VoidCallback onMarkInProgress;
@@ -114,6 +118,7 @@ class GridItemWidget extends StatelessWidget {
   const GridItemWidget({
     required this.title,
     required this.poster,
+    required this.estado,
     required this.onDelete,
     required this.onMarkCompleted,
     required this.onMarkInProgress,
@@ -123,14 +128,25 @@ class GridItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    Color cardColor;
+
+    if (estado == 'completado') {
+      cardColor = Color.fromARGB(100, 46, 125, 50);
+    } else if (estado == 'en progreso') {
+      cardColor = Color.fromARGB(100, 21, 101, 192);
+    } else if (estado == 'sin completar') {
+      cardColor = Color.fromARGB(100, 198, 40, 40);
+    } else {
+      cardColor = Color(0xFF4A4A4A);
+    }
+
     return GestureDetector(
       onTap: () {
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return WillPopScope(
-              onWillPop: () async =>
-                  false, // Evitar que se cierre el diálogo al presionar el botón de retroceso
+              onWillPop: () async => false,
               child: AlertDialog(
                 backgroundColor: Color(0xFF1E1E1E),
                 titleTextStyle: TextStyle(
@@ -152,7 +168,7 @@ class GridItemWidget extends StatelessWidget {
                           TextStyle(color: Colors.white, fontSize: 14),
                       onTap: () {
                         onDelete();
-                        Navigator.of(context).pop(); // Cerrar el diálogo
+                        Navigator.of(context).pop();
                       },
                     ),
                     ListTile(
@@ -165,7 +181,7 @@ class GridItemWidget extends StatelessWidget {
                           TextStyle(color: Colors.white, fontSize: 14),
                       onTap: () {
                         onMarkCompleted();
-                        Navigator.of(context).pop(); // Cerrar el diálogo
+                        Navigator.of(context).pop();
                       },
                     ),
                     ListTile(
@@ -178,7 +194,7 @@ class GridItemWidget extends StatelessWidget {
                           TextStyle(color: Colors.white, fontSize: 14),
                       onTap: () {
                         onMarkInProgress();
-                        Navigator.of(context).pop(); // Cerrar el diálogo
+                        Navigator.of(context).pop();
                       },
                     ),
                     ListTile(
@@ -191,7 +207,7 @@ class GridItemWidget extends StatelessWidget {
                           TextStyle(color: Colors.white, fontSize: 14),
                       onTap: () {
                         onMarkIncomplete();
-                        Navigator.of(context).pop(); // Cerrar el diálogo
+                        Navigator.of(context).pop();
                       },
                     ),
                   ],
@@ -203,7 +219,7 @@ class GridItemWidget extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0xFF4A4A4A),
+          color: cardColor,
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Column(
