@@ -153,6 +153,8 @@ class _Saved_Elements_PageState extends State<Saved_Elements_Page> {
                 onTap: () {
                   showDeleteDialog(title, documentId);
                 },
+                onLongPress: () =>
+                    _showCollectionsDialog(context, title, poster),
                 child: GridItemWidget(
                   title: title,
                   poster: poster,
@@ -164,6 +166,147 @@ class _Saved_Elements_PageState extends State<Saved_Elements_Page> {
       ),
     );
   }
+}
+
+void _addToCollection(BuildContext context, String title, String poster,
+    String collectionId) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    return;
+  }
+
+  final userId = user.uid;
+  final collectionRef = FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('collections')
+      .doc(collectionId);
+
+  final collectionSnapshot = await collectionRef.get();
+  if (!collectionSnapshot.exists) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('La colección no existe'),
+        backgroundColor: Colors.red,
+      ),
+    );
+    return;
+  }
+
+  final videojuegoCollectionRef = collectionRef.collection('videojuegos');
+  final videojuegoQuery =
+      await videojuegoCollectionRef.where('title', isEqualTo: title).get();
+
+  if (videojuegoQuery.docs.isNotEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('El videojuego ya está en la colección'),
+        backgroundColor: Colors.red,
+      ),
+    );
+    return;
+  }
+
+  final collectionData = collectionSnapshot.data() as Map<String, dynamic>;
+  final collectionName =
+      collectionData['name']; // Obtener el campo "name" de la colección
+
+  final videojuegoData = {'title': title, 'poster': poster, 'estado': ""};
+
+  try {
+    videojuegoCollectionRef.add(videojuegoData);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+            'Añadido a $collectionName'), // Mostrar el campo "name" en lugar de collectionId
+        backgroundColor: Colors.green,
+      ),
+    );
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+            'Error al añadir a $collectionName'), // Mostrar el campo "name" en lugar de collectionId
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+}
+
+Future<List<DocumentSnapshot>> _getUserCollections() async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    return [];
+  }
+
+  final userId = user.uid;
+  final collectionsSnapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('collections')
+      .get();
+
+  return collectionsSnapshot.docs;
+}
+
+void _showCollectionsDialog(BuildContext context, String title, String poster) {
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return FutureBuilder<List<DocumentSnapshot>>(
+        future: _getUserCollections(),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+
+          if (snapshot.hasError || !snapshot.hasData) {
+            return AlertDialog(
+              backgroundColor: Color(0xFF1E1E1E),
+              titleTextStyle: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+              title: Text('Añadir a colección'),
+              content: Text('Error al cargar las colecciones'),
+            );
+          }
+
+          final collections = snapshot.data!;
+          return AlertDialog(
+            backgroundColor: Color(0xFF1E1E1E),
+            titleTextStyle: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+            title: Text('Añadir a colección'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: collections.map((doc) {
+                final collectionData = doc.data() as Map<String, dynamic>;
+                final collectionName = collectionData['name'];
+                return ListTile(
+                  leading: Icon(
+                    Icons.check_circle,
+                    color: Colors.white,
+                  ),
+                  title: Text(collectionName),
+                  titleTextStyle: TextStyle(color: Colors.white, fontSize: 16),
+                  onTap: () {
+                    _addToCollection(context, title, poster, doc.id);
+                    Navigator.pop(dialogContext);
+                  },
+                );
+              }).toList(),
+            ),
+          );
+        },
+      );
+    },
+  );
 }
 
 class GridItemWidget extends StatelessWidget {
