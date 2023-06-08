@@ -22,7 +22,24 @@ class CollectionDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Videojuegos'),
+        title: StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .collection('collections')
+              .doc(collectionId)
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasData) {
+              final collectionData =
+                  snapshot.data!.data() as Map<String, dynamic>;
+              final collectionName = collectionData['name'] as String?;
+              return Text(collectionName ?? 'Videojuegos');
+            }
+            return Text('Videojuegos');
+          },
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: collectionRef.snapshots(),
