@@ -283,24 +283,27 @@ void _showCollectionsDialog(BuildContext context, String title, String poster) {
               fontSize: 20,
             ),
             title: Text('Añadir a colección'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: collections.map((doc) {
-                final collectionData = doc.data() as Map<String, dynamic>;
-                final collectionName = collectionData['name'];
-                return ListTile(
-                  leading: Icon(
-                    Icons.check_circle,
-                    color: Colors.white,
-                  ),
-                  title: Text(collectionName),
-                  titleTextStyle: TextStyle(color: Colors.white, fontSize: 16),
-                  onTap: () {
-                    _addToCollection(context, title, poster, doc.id);
-                    Navigator.pop(dialogContext);
-                  },
-                );
-              }).toList(),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: collections.map((doc) {
+                  final collectionData = doc.data() as Map<String, dynamic>;
+                  final collectionName = collectionData['name'];
+                  return ListTile(
+                    leading: Icon(
+                      Icons.add_to_photos_rounded,
+                      color: Colors.white,
+                    ),
+                    title: Text(collectionName),
+                    titleTextStyle:
+                        TextStyle(color: Colors.white, fontSize: 16),
+                    onTap: () {
+                      _addToCollection(context, title, poster, doc.id);
+                      Navigator.pop(dialogContext);
+                    },
+                  );
+                }).toList(),
+              ),
             ),
           );
         },
@@ -324,7 +327,7 @@ class GridItemWidget extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFF4A4A4A),
+        color: Colors.white.withOpacity(0.05),
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(

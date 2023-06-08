@@ -82,7 +82,7 @@ class _Menu_PageState extends State<Menu_Page> {
           ),
           TabItem(
             icon: Icons.bookmark_border_rounded,
-            activeIcon: Icons.bookmark_border,
+            activeIcon: Icons.bookmark_rounded,
             title: "Guardados",
           ),
         ],

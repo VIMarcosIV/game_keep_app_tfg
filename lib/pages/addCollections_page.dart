@@ -9,11 +9,14 @@ class AddCollectionScreen extends StatefulWidget {
 
 class _AddCollectionScreenState extends State<AddCollectionScreen> {
   late final TextEditingController collectionNameController;
+  late List<String> existingCollections =
+      []; // Inicializar la lista de colecciones existentes
 
   @override
   void initState() {
     super.initState();
     collectionNameController = TextEditingController();
+    fetchExistingCollections();
   }
 
   @override
@@ -47,6 +50,7 @@ class _AddCollectionScreenState extends State<AddCollectionScreen> {
         );
 
         collectionNameController.clear();
+        fetchExistingCollections(); // Actualizar la lista de colecciones existentes
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -58,45 +62,136 @@ class _AddCollectionScreenState extends State<AddCollectionScreen> {
     }
   }
 
+  Future<void> fetchExistingCollections() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final collectionRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('collections');
+
+      final snapshot = await collectionRef.get();
+      final collections = snapshot.docs
+          .map((doc) => doc['name'] as String)
+          .toList()
+          .cast<String>(); // Conversión explícita a List<String>
+
+      setState(() {
+        existingCollections = collections;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agregar Colección'),
+        title: Text('Nueva Colección'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: collectionNameController,
-              decoration: InputDecoration(
-                labelText: 'Nombre de la Colección',
-                labelStyle: TextStyle(
-                    color: Colors.yellow), // Cambiar el color del label
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Colors
-                          .yellow), // Cambiar el color del borde cuando el TextField no está enfocado
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Colors
-                          .yellow), // Cambiar el color del borde cuando el TextField está enfocado
+            Card(
+              color: Colors.white.withOpacity(0.05),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Agregar colección:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    TextField(
+                      controller: collectionNameController,
+                      decoration: InputDecoration(
+                        labelText: 'Introduce un nombre',
+                        hintText: 'Nombre de la Colección',
+                        hintStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                        labelStyle: TextStyle(
+                          color: Colors.yellow,
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.yellow,
+                          ),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.yellow,
+                          ),
+                        ),
+                      ),
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 8.0),
+                    IconButton(
+                      onPressed: addCollection,
+                      icon: Icon(
+                        Icons.my_library_add_rounded,
+                        color: Colors.yellow,
+                        size: 65,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                  ],
                 ),
               ),
-              style: TextStyle(
-                  color:
-                      Colors.white), // Cambiar el color del texto del TextField
             ),
-            SizedBox(height: 16.0),
-            IconButton(
-              onPressed: addCollection,
-              icon: Icon(
-                Icons.my_library_add_rounded,
-                color: Colors.yellow, // Cambiar el color del icono a amarillo
-                size: 65,
+            SizedBox(height: 8.0),
+            Card(
+              color: Colors.white.withOpacity(0.05),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Colecciones existentes:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    if (existingCollections.isEmpty)
+                      Text(
+                        'No hay colecciones existentes',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.yellow,
+                        ),
+                      )
+                    else
+                      Align(
+                        alignment:
+                            Alignment.centerLeft, // Alinear a la izquierda
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: existingCollections.map((collection) {
+                            return Text(
+                              collection,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.yellow,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ],

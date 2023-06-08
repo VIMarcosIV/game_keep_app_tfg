@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'addCollections_page.dart';
 import 'collectionDetail_page.dart';
+import 'dart:math';
 
 class CollectionScreen extends StatelessWidget {
   @override
@@ -55,10 +56,10 @@ class CollectionScreen extends StatelessWidget {
 
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+                crossAxisCount: 3,
                 mainAxisSpacing: 12.0,
                 crossAxisSpacing: 12.0,
-                childAspectRatio: 1.0,
+                childAspectRatio: 0.80,
               ),
               padding: EdgeInsets.all(16.0),
               itemCount: collections.length,
@@ -143,11 +144,21 @@ class GridItemWidget extends StatelessWidget {
 
   const GridItemWidget({required this.title});
 
+  Color _generateRandomColor() {
+    Random random = Random();
+    int r = random.nextInt(256);
+    int g = random.nextInt(256);
+    int b = random.nextInt(256);
+    return Color.fromARGB(100, r, g, b);
+  }
+
   @override
   Widget build(BuildContext context) {
+    Color randomColor = _generateRandomColor();
+
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFF4A4A4A),
+        color: randomColor,
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Center(
@@ -155,7 +166,7 @@ class GridItemWidget extends StatelessWidget {
           title,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 15.0,
+            fontSize: 12.0,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),

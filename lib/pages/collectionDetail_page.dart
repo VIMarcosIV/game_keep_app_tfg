@@ -137,7 +137,7 @@ class GridItemWidget extends StatelessWidget {
     } else if (estado == 'sin completar') {
       cardColor = Color.fromARGB(100, 198, 40, 40);
     } else {
-      cardColor = Color(0xFF4A4A4A);
+      cardColor = Colors.white.withOpacity(0.05);
     }
 
     return GestureDetector(
