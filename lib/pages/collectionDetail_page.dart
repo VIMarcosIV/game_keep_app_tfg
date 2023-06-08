@@ -9,6 +9,7 @@ class CollectionDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final user = FirebaseAuth.instance.currentUser;
     final uid = user!.uid;
 
@@ -72,6 +73,7 @@ class GridItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
         color: Color(0xFF4A4A4A),
@@ -96,8 +98,8 @@ class GridItemWidget extends StatelessWidget {
             child: Text(
               title,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16.0,
+              style: theme.textTheme.headline1!.copyWith(
+                fontSize: 10.0,
                 color: Colors.white,
               ),
             ),

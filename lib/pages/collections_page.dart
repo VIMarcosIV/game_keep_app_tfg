@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'addCollections_page.dart';
 import 'collectionDetail_page.dart';
 
 class CollectionScreen extends StatelessWidget {
@@ -16,7 +17,25 @@ class CollectionScreen extends StatelessWidget {
 
       return Scaffold(
         appBar: AppBar(
-          title: Text('Mis Colecciones'),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Mis Colecciones'),
+              IconButton(
+                icon: Icon(Icons.my_library_add_rounded),
+                iconSize: 40,
+                color: Colors.yellow,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddCollectionScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
         body: StreamBuilder<QuerySnapshot>(
           stream: collectionRef.snapshots(),
@@ -94,7 +113,8 @@ class GridItemWidget extends StatelessWidget {
           title,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 18.0,
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),

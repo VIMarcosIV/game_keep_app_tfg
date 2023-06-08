@@ -22,7 +22,6 @@ class _Menu_PageState extends State<Menu_Page> {
       Grid_Page(),
       CollectionScreen(),
       Saved_Elements_Page(),
-      AddCollectionScreen(),
     ];
     return Scaffold(
       appBar: AppBar(
@@ -85,11 +84,6 @@ class _Menu_PageState extends State<Menu_Page> {
             icon: Icons.bookmark_border_rounded,
             activeIcon: Icons.bookmark_border,
             title: "Guardados",
-          ),
-          TabItem(
-            icon: Icons.collections_bookmark_outlined,
-            activeIcon: Icons.collections_bookmark,
-            title: "A.Colecciones",
           ),
         ],
         initialActiveIndex: selectedPage,
