@@ -38,13 +38,17 @@ class _Grid_PageState extends State<Grid_Page> {
           width: double.infinity,
           child: TextField(
             controller: searchController,
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               hintText: 'Buscar por título',
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
+                borderSide: BorderSide(color: Colors.yellow),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.yellow),
               ),
               hintStyle: TextStyle(color: Colors.white),
-              icon: Icon(Icons.search, color: Colors.white),
+              icon: Icon(Icons.search, color: Colors.yellow),
             ),
           ),
         ),

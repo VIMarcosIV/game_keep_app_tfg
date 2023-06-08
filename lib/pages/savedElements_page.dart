@@ -95,19 +95,18 @@ class _Saved_Elements_PageState extends State<Saved_Elements_Page> {
           width: double.infinity,
           child: TextField(
             controller: searchController,
+            style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
               hintText: 'Buscar por título',
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
+                borderSide: BorderSide(color: Colors.yellow),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.yellow),
               ),
               hintStyle: TextStyle(color: Colors.white),
-              icon: Icon(Icons.search, color: Colors.white),
+              icon: Icon(Icons.search, color: Colors.yellow),
             ),
-            onChanged: (value) {
-              setState(() {
-                searchText = value;
-              });
-            },
           ),
         ),
       ),

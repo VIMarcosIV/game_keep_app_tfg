@@ -73,12 +73,31 @@ class _AddCollectionScreenState extends State<AddCollectionScreen> {
               controller: collectionNameController,
               decoration: InputDecoration(
                 labelText: 'Nombre de la Colección',
+                labelStyle: TextStyle(
+                    color: Colors.yellow), // Cambiar el color del label
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Colors
+                          .yellow), // Cambiar el color del borde cuando el TextField no está enfocado
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Colors
+                          .yellow), // Cambiar el color del borde cuando el TextField está enfocado
+                ),
               ),
+              style: TextStyle(
+                  color:
+                      Colors.white), // Cambiar el color del texto del TextField
             ),
             SizedBox(height: 16.0),
-            ElevatedButton(
+            IconButton(
               onPressed: addCollection,
-              child: Text('Agregar Colección'),
+              icon: Icon(
+                Icons.my_library_add_rounded,
+                color: Colors.yellow, // Cambiar el color del icono a amarillo
+                size: 65,
+              ),
             ),
           ],
         ),
