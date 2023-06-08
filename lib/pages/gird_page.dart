@@ -84,10 +84,14 @@ class _Grid_PageState extends State<Grid_Page> {
               DocumentSnapshot document = filteredDocs[index];
               String title = document['title'] as String;
               String poster = document['poster'] as String;
-              return GridItemWidget(
-                title: title,
-                poster: poster,
-                onTap: () => _showOptionsDialog(context, title, poster),
+              return GestureDetector(
+                onTap: () => _showSaveElementDialog(context, title, poster),
+                onLongPress: () =>
+                    _showCollectionsDialog(context, title, poster),
+                child: GridItemWidget(
+                  title: title,
+                  poster: poster,
+                ),
               );
             },
           );
@@ -96,14 +100,18 @@ class _Grid_PageState extends State<Grid_Page> {
     );
   }
 
-  void _showOptionsDialog(BuildContext context, String title, String poster) {
+  void _showSaveElementDialog(
+      BuildContext context, String title, String poster) {
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           backgroundColor: Color(0xFF1E1E1E),
           titleTextStyle: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
           title: Text(title),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -155,75 +163,173 @@ class _Grid_PageState extends State<Grid_Page> {
                   Navigator.pop(dialogContext);
                 },
               ),
-              ListTile(
-                leading: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                title: Text('Añadir a colección'),
-                titleTextStyle: TextStyle(color: Colors.white, fontSize: 16),
-                onTap: () {
-                  // Lógica para añadir a colección
-                  Navigator.pop(dialogContext);
-                },
-              ),
             ],
           ),
         );
       },
     );
   }
+
+  void _showCollectionsDialog(
+      BuildContext context, String title, String poster) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return FutureBuilder<List<DocumentSnapshot>>(
+          future: _getUserCollections(),
+          builder: (BuildContext context,
+              AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            }
+
+            if (snapshot.hasError || !snapshot.hasData) {
+              return AlertDialog(
+                backgroundColor: Color(0xFF1E1E1E),
+                titleTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                title: Text('Añadir a colección'),
+                content: Text('Error al cargar las colecciones'),
+              );
+            }
+
+            final collections = snapshot.data!;
+            return AlertDialog(
+              backgroundColor: Color(0xFF1E1E1E),
+              titleTextStyle: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+              title: Text('Añadir a colección'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: collections.map((doc) {
+                  final collectionData = doc.data() as Map<String, dynamic>;
+                  final collectionId = doc.id;
+                  return ListTile(
+                    leading: Icon(
+                      Icons.check_circle,
+                      color: Colors.white,
+                    ),
+                    title: Text(collectionId),
+                    titleTextStyle:
+                        TextStyle(color: Colors.white, fontSize: 16),
+                    onTap: () {
+                      _addToCollection(context, title, poster, collectionId);
+                      Navigator.pop(dialogContext);
+                    },
+                  );
+                }).toList(),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _addToCollection(BuildContext context, String title, String poster,
+      String collectionId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return;
+    }
+
+    final userId = user.uid;
+    final collectionRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('collections')
+        .doc(collectionId);
+
+    final videojuegoData = {
+      'title': title,
+      'poster': poster,
+    };
+
+    try {
+      await collectionRef.collection('videojuegos').add(videojuegoData);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Añadido a $collectionId'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al añadir a $collectionId'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<List<DocumentSnapshot>> _getUserCollections() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return [];
+    }
+
+    final userId = user.uid;
+    final collectionsSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('collections')
+        .get();
+
+    return collectionsSnapshot.docs;
+  }
 }
 
 class GridItemWidget extends StatelessWidget {
   final String title;
   final String poster;
-  final GestureTapCallback onTap;
 
   const GridItemWidget({
     required this.title,
     required this.poster,
-    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Color(0xFF4A4A4A),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 110.0,
-              height: 110.0,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: Image.network(
-                  poster,
-                  fit: BoxFit.contain,
-                ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFF4A4A4A),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 110.0,
+            height: 110.0,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: Image.network(
+                poster,
+                fit: BoxFit.contain,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.headline1!.copyWith(
-                  fontSize: 10.0,
-                  color: Colors.white,
-                ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.headline1!.copyWith(
+                fontSize: 10.0,
+                color: Colors.white,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

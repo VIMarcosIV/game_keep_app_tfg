@@ -1,6 +1,7 @@
 import 'package:flutter_tfg/pages/logout_page.dart';
 import 'package:flutter_tfg/pages/savedElements_page.dart';
 import '../library/imports.dart';
+import 'addCollections_page.dart';
 import 'collections_page.dart';
 import 'gird_page.dart';
 
@@ -19,8 +20,9 @@ class _Menu_PageState extends State<Menu_Page> {
     var _pageOption = [
       // Aquí van las screens
       Grid_Page(),
-      Collections_Page(),
+      CollectionScreen(),
       Saved_Elements_Page(),
+      AddCollectionScreen(),
     ];
     return Scaffold(
       appBar: AppBar(
@@ -83,6 +85,11 @@ class _Menu_PageState extends State<Menu_Page> {
             icon: Icons.bookmark_border_rounded,
             activeIcon: Icons.bookmark_border,
             title: "Guardados",
+          ),
+          TabItem(
+            icon: Icons.collections_bookmark_outlined,
+            activeIcon: Icons.collections_bookmark,
+            title: "A.Colecciones",
           ),
         ],
         initialActiveIndex: selectedPage,

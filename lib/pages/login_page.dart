@@ -107,6 +107,7 @@ class Login_Page extends StatelessWidget {
                               width: double.infinity,
                               child: SignInButton(
                                 Buttons.Google,
+                                text: "Entrar con Google",
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
