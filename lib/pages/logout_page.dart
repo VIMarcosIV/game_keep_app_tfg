@@ -13,11 +13,13 @@ class Logout_Page extends StatefulWidget {
 class _Logout_PageState extends State<Logout_Page> {
   final user = FirebaseAuth.instance.currentUser;
   int savedElementsCount = 0;
+  int collectionsCount = 0;
 
   @override
   void initState() {
     super.initState();
     countSavedElements();
+    countCollections();
   }
 
   void countSavedElements() async {
@@ -28,6 +30,18 @@ class _Logout_PageState extends State<Logout_Page> {
         .get();
     setState(() {
       savedElementsCount = querySnapshot.docs.length;
+    });
+  }
+
+  void countCollections() async {
+    final userId = user?.uid;
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('collections')
+        .get();
+    setState(() {
+      collectionsCount = querySnapshot.docs.length;
     });
   }
 
@@ -52,8 +66,6 @@ class _Logout_PageState extends State<Logout_Page> {
 
   @override
   Widget build(BuildContext context) {
-    int collectionsCount = 5; // Número de colecciones (hardcodeado)
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Cuenta de usuario'),
