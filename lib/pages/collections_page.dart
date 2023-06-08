@@ -68,6 +68,48 @@ class CollectionScreen extends StatelessWidget {
                 final collectionName = collection['name'] as String;
 
                 return GestureDetector(
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          backgroundColor: Color(0xFF1E1E1E),
+                          title: Text(
+                            'Eliminar colección',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          content: Text(
+                            '¿Estás seguro de que quieres eliminar esta colección?',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          actions: [
+                            TextButton(
+                              child: Text(
+                                'Cancelar',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: Text(
+                                'Eliminar',
+                                style: TextStyle(
+                                  color: Color.fromRGBO(231, 25, 31, 0.86),
+                                ),
+                              ),
+                              onPressed: () {
+                                // Eliminar la colección de Firebase
+                                collection.reference.delete();
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                   onTap: () {
                     Navigator.push(
                       context,
