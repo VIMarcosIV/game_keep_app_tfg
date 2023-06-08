@@ -42,16 +42,19 @@ class _Grid_PageState extends State<Grid_Page> {
             decoration: InputDecoration(
               hintText: 'Buscar por título',
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.yellow),
+                borderSide: BorderSide(color: Color.fromARGB(0, 0, 0, 0)),
               ),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.yellow),
+                borderSide: BorderSide(color: Color.fromARGB(0, 0, 0, 0)),
               ),
               hintStyle: TextStyle(color: Colors.white),
               icon: Icon(Icons.search, color: Colors.yellow),
             ),
           ),
         ),
+        titleSpacing: 20,
+        elevation: 5,
+        bottomOpacity: 100,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
