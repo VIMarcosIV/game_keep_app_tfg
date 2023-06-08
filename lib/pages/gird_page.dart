@@ -209,17 +209,17 @@ class _Grid_PageState extends State<Grid_Page> {
                 mainAxisSize: MainAxisSize.min,
                 children: collections.map((doc) {
                   final collectionData = doc.data() as Map<String, dynamic>;
-                  final collectionId = doc.id;
+                  final collectionName = collectionData['name'];
                   return ListTile(
                     leading: Icon(
                       Icons.check_circle,
                       color: Colors.white,
                     ),
-                    title: Text(collectionId),
+                    title: Text(collectionName),
                     titleTextStyle:
                         TextStyle(color: Colors.white, fontSize: 16),
                     onTap: () {
-                      _addToCollection(context, title, poster, collectionId);
+                      _addToCollection(context, title, poster, doc.id);
                       Navigator.pop(dialogContext);
                     },
                   );
@@ -246,23 +246,54 @@ class _Grid_PageState extends State<Grid_Page> {
         .collection('collections')
         .doc(collectionId);
 
+    final collectionSnapshot = await collectionRef.get();
+    if (!collectionSnapshot.exists) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('La colección no existe'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final videojuegoCollectionRef = collectionRef.collection('videojuegos');
+    final videojuegoQuery =
+        await videojuegoCollectionRef.where('title', isEqualTo: title).get();
+
+    if (videojuegoQuery.docs.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('El videojuego ya está en la colección'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final collectionData = collectionSnapshot.data() as Map<String, dynamic>;
+    final collectionName =
+        collectionData['name']; // Obtener el campo "name" de la colección
+
     final videojuegoData = {
       'title': title,
       'poster': poster,
     };
 
     try {
-      await collectionRef.collection('videojuegos').add(videojuegoData);
+      videojuegoCollectionRef.add(videojuegoData);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Añadido a $collectionId'),
+          content: Text(
+              'Añadido a $collectionName'), // Mostrar el campo "name" en lugar de collectionId
           backgroundColor: Colors.green,
         ),
       );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error al añadir a $collectionId'),
+          content: Text(
+              'Error al añadir a $collectionName'), // Mostrar el campo "name" en lugar de collectionId
           backgroundColor: Colors.red,
         ),
       );
