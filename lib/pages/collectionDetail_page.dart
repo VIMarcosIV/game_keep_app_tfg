@@ -31,13 +31,15 @@ class CollectionDetailScreen extends StatelessWidget {
               .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.hasData) {
-              final collectionData =
-                  snapshot.data!.data() as Map<String, dynamic>;
-              final collectionName = collectionData['name'] as String?;
-              return Text(collectionName ?? 'Videojuegos');
+            if (snapshot.hasError || !snapshot.hasData) {
+              return Text('');
             }
-            return Text('Videojuegos');
+
+            final collectionData =
+                snapshot.data!.data() as Map<String, dynamic>;
+            final collectionName = collectionData?['name'] ?? 'Videojuegos';
+
+            return Text(collectionName);
           },
         ),
       ),
