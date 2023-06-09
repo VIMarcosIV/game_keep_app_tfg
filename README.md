@@ -1,16 +1,17 @@
-# flutter_tfg
+# Game Keep App
 
-A new Flutter project.
+An Android and IOS App for videogame library-like administration
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is made with these technologies:
+- Flutter
+- Firebase
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Overview
+- Login screen for users, with multiple login options
+- Home screen with all the data in the database
+- User's Collections screen with all the user collections
+- Add Collection screen to add a new collection
+- Log out screen along with user info
+- User Saved Elements screen with all the user elements
