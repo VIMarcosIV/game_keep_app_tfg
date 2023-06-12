@@ -20,7 +20,7 @@ class CollectionScreen extends StatelessWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Mis Colecciones'),
+              Text('Crear Colección'),
               IconButton(
                 icon: Icon(Icons.my_library_add_rounded),
                 iconSize: 40,
