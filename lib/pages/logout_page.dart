@@ -88,8 +88,9 @@ class _Logout_PageState extends State<Logout_Page> {
                 SizedBox(width: 16),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      SizedBox(height: 14),
                       Text(
                         user?.email ?? '',
                         style: TextStyle(
